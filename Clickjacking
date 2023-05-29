@@ -1,0 +1,34 @@
+const nuclei = require('nuclei');
+
+async function findClickjacking(url) {
+  const templates = [
+    'cves/2020/CVE-2020-25215.yaml', // Example clickjacking vulnerability template
+    // Add more clickjacking templates or customize the existing one as per your requirements
+  ];
+
+  const options = {
+    silent: true, // Disable console output
+    json: true, // Output results in JSON format
+    debug: false, // Disable debug mode
+    noColor: true, // Disable colored output
+  };
+
+  const results = await nuclei.scan(url, templates, options);
+
+  // Process the results
+  if (results && results.length > 0) {
+    console.log('Clickjacking vulnerabilities found:');
+    for (const result of results) {
+      console.log(`- URL: ${result.host}`);
+      console.log(`  Template: ${result.info.template}`);
+      console.log(`  Output: ${result.output}`);
+      console.log();
+    }
+  } else {
+    console.log('No clickjacking vulnerabilities found.');
+  }
+}
+
+// Usage example
+const targetUrl = 'https://example.com';
+findClickjacking(targetUrl);
